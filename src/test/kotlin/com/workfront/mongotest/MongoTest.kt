@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Criteria
@@ -36,6 +38,7 @@ class MongoTest : BaseSpringIntegration() {
         (1..2).forEach {
             val start = System.nanoTime()
             logger.info("Searching $it")
+//            val find = personRepository.findByAgeNot(PageRequest(0, 10000, Sort.Direction.ASC, "name"), 60)
             val find = mongoTemplate.find(query, Person::class.java)
             objectMapper.writeValue(NullOutputStream(), find) // Force it to iterate all fields
 
@@ -47,50 +50,36 @@ class MongoTest : BaseSpringIntegration() {
     @Test
     fun populate() {
         logger.info("Creating Addresses")
-        var addresses = (1..1000)
-                .map { Address(value = "$it ${directions.random()} ${streets.random()}") }
-                .map { addressRepository.save(it) }
+        val addresses = addressRepository.save((1..1000)
+                .map { Address(value = "$it ${directions.random()} ${streets.random()}") })
 
         logger.info("Creating Most Bossy Jobs")
-        var mostBossyJobs = (1..1000)
-                .map { Job(companyName = "Job $it", salary = 1_000_000_000) }
-                .map { jobRepository.save(it) }
+        val mostBossyJobs = jobRepository.save((1..1000)
+                .map { Job(companyName = "Job $it", salary = 1_000_000_000) })
 
-        var mostBossyPersons = (1..1_000_000)
-                .map { Person(name="Most Bossy$it", address = addresses.random(), job = mostBossyJobs.random(), age = 60) }
-                .map { personRepository.save(it) }
+        val mostBossyPersons = personRepository.save((1..1_000_000)
+                .map { Person(name="Most Bossy$it", address = addresses.random(), job = mostBossyJobs.random(), age = 60) })
 
         logger.info("Creating Really Bossy Jobs")
-        var reallyBossyJobs = (1..1000)
-                .map { Job(companyName = "Job $it", salary = 1_000_000, boss = mostBossyPersons.random()) }
-                .map { jobRepository.save(it) }
+        val reallyBossyJobs = jobRepository.save((1..1000)
+                .map { Job(companyName = "Job $it", salary = 1_000_000, boss = mostBossyPersons.random()) })
 
-        var reallyBossyPeople = (1..1_000_000)
-                .map { Person(name="Really Bossy$it", address = addresses.random(), job=reallyBossyJobs.random(), age = 50) }
-                .map { personRepository.save(it) }
+        val reallyBossyPeople = personRepository.save((1..1_000_000)
+                .map { Person(name="Really Bossy$it", address = addresses.random(), job=reallyBossyJobs.random(), age = 50) })
 
         logger.info("Creating Pretty Bossy Jobs")
-        var prettyBossyJobs = (1..1000)
-                .map { Job(companyName = "Job $it", salary = 1_000, boss = reallyBossyPeople.random()) }
-                .map { jobRepository.save(it) }
+        val prettyBossyJobs = jobRepository.save((1..1000)
+                .map { Job(companyName = "Job $it", salary = 1_000, boss = reallyBossyPeople.random()) })
 
-        var prettyBossyPeople = (1..1_000_000)
-                .map { Person(name = "Pretty Bossy$it", address = addresses.random(), job = prettyBossyJobs.random(), age = 40) }
-                .map { personRepository.save(it) }
+        val prettyBossyPeople = personRepository.save((1..1_000_000)
+                .map { Person(name = "Pretty Bossy$it", address = addresses.random(), job = prettyBossyJobs.random(), age = 40) })
 
         logger.info("Creating Underling Jobs")
-        var underlingJobs = (1..1000)
-                .map { Job(companyName = "Job $it", salary = 1, boss = prettyBossyPeople.random()) }
-                .map { jobRepository.save(it) }
+        val underlingJobs = jobRepository.save((1..1000)
+                .map { Job(companyName = "Job $it", salary = 1, boss = prettyBossyPeople.random()) })
 
-        (1..1_000_000)
-                .map { Person(name = "Pretty Bossy$it", address = addresses.random(), job = underlingJobs.random(), age = 30) }
-                .map { personRepository.save(it) }
-
-        prettyBossyJobs = listOf()
-        prettyBossyPeople = listOf()
-        underlingJobs = listOf()
-        addresses = listOf()
+        personRepository.save((1..1_000_000)
+                .map { Person(name = "Pretty Bossy$it", address = addresses.random(), job = underlingJobs.random(), age = 30) })
     }
 }
 
