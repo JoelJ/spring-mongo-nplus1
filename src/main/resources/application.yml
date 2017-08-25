@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      database: mongotest
+      repositories:
+        enabled: true
+
+server:
+  port: 4001
