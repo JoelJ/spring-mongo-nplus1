@@ -12,7 +12,8 @@ open class Job(
     var id: String? = null,
     var companyName: String? = null,
 
-    @DBRef
+//    @DBRef(lazy = true)
+    @DBRef(lazy = false)
     var boss: Person? = null,
     var salary: Int = 0
 )

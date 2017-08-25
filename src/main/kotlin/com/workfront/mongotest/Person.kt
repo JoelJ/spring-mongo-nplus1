@@ -13,9 +13,11 @@ open class Person(
     var name: String? = null,
     var age: Int = 0,
 
-    @DBRef
+    @DBRef(lazy = true)
+//    @DBRef(lazy = false)
     var address: Address? = null,
 
-    @DBRef
+    @DBRef(lazy = true)
+//    @DBRef(lazy = false)
     var job: Job? = null
 )
