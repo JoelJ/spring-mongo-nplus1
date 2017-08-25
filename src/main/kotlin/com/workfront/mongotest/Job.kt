@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "jobs")
-@JsonIgnoreProperties(value = *arrayOf("hibernateLazyInitializer", "handler"), ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 open class Job(
     @Id
     var id: String? = null,
