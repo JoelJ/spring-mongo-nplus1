@@ -9,5 +9,5 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing
 open class MongoTestApp
 
 fun main(args: Array<String>) {
-    SpringApplication.run(MongoTestApp::class, *args)
+    SpringApplication.run(MongoTestApp::class.java, *args)
 }

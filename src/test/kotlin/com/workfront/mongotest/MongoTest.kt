@@ -1,9 +1,8 @@
 package com.workfront.mongotest
 
-import org.junit.Test
+class MongoTest : BaseSpringIntegration() {
+    companion object :Loggable
 
-class MongoTest {
-    @Test
     fun test() {
 
     }
